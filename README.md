@@ -7,7 +7,7 @@
 
 ## Status
 
-🚧 Phase 1 (scaffolding) — in progress. See [Roadmap](#roadmap).
+🚧 Phase 5 (classical + boosting sweep) — up next. See [Roadmap](#roadmap).
 
 ## What this project does
 
@@ -44,15 +44,14 @@ btcpred report     # leaderboard + tearsheet
 
 | Phase | Deliverable | Status |
 |---|---|---|
-| 1. Scaffolding | repo, CI, pre-commit, CLI stubs | 🚧 in progress |
-| 2. Data ingestion | OHLCV, macro, on-chain, sentiment fetchers | ⬜ |
-| 3. EDA | stationarity, ACF/PACF, regime plots | ⬜ |
-| 4. Feature engineering | 100+ leakage-free features | ⬜ |
-| 5. Validation harness + baselines | purged walk-forward CV, naive/buy-hold baselines | ⬜ |
-| 6. Classical + boosting sweep | linear, trees, XGBoost/LightGBM/CatBoost | ⬜ |
-| 7. Deep learning sweep | LSTM/GRU/CNN/Transformer/TCN | ⬜ |
-| 8. Ensembles + backtest | stacking, cost-aware backtest | ⬜ |
-| 9. Reporting + app | Streamlit dashboard, final results | ⬜ |
+| 1. Scaffolding | repo, CI, pre-commit, CLI stubs | ✅ done |
+| 2. Data layer | OHLCV/macro/on-chain/sentiment fetchers, cleaning, daily merge | ✅ done |
+| 3. Features | technical/return/regime/exogenous features, leakage-safe assembly | ✅ done |
+| 4. Validation harness | purged walk-forward CV, metrics, Diebold-Mariano, Tier-0 baselines | ✅ done |
+| 5. Classical + boosting sweep | linear/trees/SVM/KNN + XGBoost/LightGBM/CatBoost | 🚧 in progress |
+| 6. Deep learning sweep | LSTM/GRU/CNN/Transformer/TCN in PyTorch | ⬜ |
+| 7. Ensembles + backtest | stacking, regime-conditional selection, cost-aware backtest | ⬜ |
+| 8. Reporting + app | Streamlit dashboard, leaderboard, final README | ⬜ |
 
 ## Repository layout
 
