@@ -7,7 +7,7 @@
 
 ## Status
 
-🚧 Phase 6 (deep learning sweep) — up next. See [Roadmap](#roadmap).
+🚧 Phase 7 (ensembles + backtest) — up next. See [Roadmap](#roadmap).
 
 ## What this project does
 
@@ -49,8 +49,8 @@ btcpred report     # leaderboard + tearsheet
 | 3. Features | technical/return/regime/exogenous features, leakage-safe assembly | ✅ done |
 | 4. Validation harness | purged walk-forward CV, metrics, Diebold-Mariano, Tier-0 baselines | ✅ done |
 | 5. Classical + boosting sweep | linear/trees/SVM/KNN + XGBoost/LightGBM/CatBoost | ✅ done |
-| 6. Deep learning sweep | LSTM/GRU/CNN/Transformer/TCN in PyTorch | 🚧 in progress |
-| 7. Ensembles + backtest | stacking, regime-conditional selection, cost-aware backtest | ⬜ |
+| 6. Deep learning sweep | LSTM/GRU/CNN/Transformer/TCN in PyTorch | ✅ done |
+| 7. Ensembles + backtest | stacking, regime-conditional selection, cost-aware backtest | 🚧 in progress |
 | 8. Reporting + app | Streamlit dashboard, leaderboard, final README | ⬜ |
 
 ## Repository layout

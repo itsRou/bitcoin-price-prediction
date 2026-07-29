@@ -22,6 +22,7 @@ from btcpred.models.boosting import (
     XGBoostRegressor,
 )
 from btcpred.models.classical import get_classification_models, get_regression_models
+from btcpred.models.deep import Architecture, TorchSequenceRegressor
 from btcpred.models.statistical import (
     AutoArimaRegressor,
     HoltWintersRegressor,
@@ -29,9 +30,22 @@ from btcpred.models.statistical import (
     VARRegressor,
 )
 
+DEEP_ARCHITECTURES: tuple[Architecture, ...] = (
+    "mlp",
+    "rnn",
+    "lstm",
+    "gru",
+    "bilstm",
+    "cnn1d",
+    "cnn_lstm",
+    "lstm_attention",
+    "transformer",
+    "tcn",
+)
+
 
 def get_regression_registry() -> dict[str, Callable[[], Any]]:
-    """All registered regression models: Tier 0 baselines, Tier 1 statistical, Tier 2/boosting."""
+    """All registered regression models: Tier 0 baselines, Tier 1/2/3, and boosting."""
     registry: dict[str, Callable[[], Any]] = {
         "naive_zero": NaiveZeroRegressor,
         "mean_return": MeanReturnRegressor,
@@ -46,7 +60,14 @@ def get_regression_registry() -> dict[str, Callable[[], Any]]:
         "catboost": CatBoostRegressorWrapper,
     }
     registry.update(get_regression_models())
+    for architecture in DEEP_ARCHITECTURES:
+        registry[architecture] = _make_deep_factory(architecture)
     return registry
+
+
+def _make_deep_factory(architecture: Architecture) -> Callable[[], TorchSequenceRegressor]:
+    """Bind `architecture` by value so each registry entry builds its own architecture."""
+    return lambda: TorchSequenceRegressor(architecture=architecture)
 
 
 def get_classification_registry() -> dict[str, Callable[[], Any]]:
