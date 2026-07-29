@@ -36,5 +36,4 @@ reports/figures/*
 Thumbs.db
 
 # uv
-.python-version
 uv.lock.bak

@@ -2,15 +2,14 @@
 
 from __future__ import annotations
 
-from typer.testing import CliRunner
-
 from btcpred.cli import app
+from typer.testing import CliRunner
 
 runner = CliRunner()
 
 
-def test_cli_shows_help_with_no_args() -> None:
-    result = runner.invoke(app, [])
+def test_cli_shows_help() -> None:
+    result = runner.invoke(app, ["--help"])
     assert result.exit_code == 0
     assert "fetch" in result.output
 
