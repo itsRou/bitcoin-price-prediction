@@ -1,0 +1,17 @@
+# Data ingestion config (Phase 2)
+exchange: binance
+symbol: BTC/USDT
+timeframes: ["1h", "1d"]
+start_date: "2017-01-01"
+macro_tickers:
+  dxy: "DX-Y.NYB"
+  sp500: "^GSPC"
+  gold: "GC=F"
+  vix: "^VIX"
+  us10y: "^TNX"
+sentiment:
+  fear_greed_url: "https://api.alternative.me/fng/"
+onchain:
+  source: "blockchain.com"
+raw_data_dir: "data/raw"
+manifest_path: "data/manifest.json"

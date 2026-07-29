@@ -1,0 +1,14 @@
+# Feature engineering config (Phase 3)
+horizons: [1, 7]
+return_lags: [1, 2, 3, 5, 7, 10, 14]
+rolling_windows: [7, 14, 30, 90]
+technical_indicators:
+  rsi_period: 14
+  macd: [12, 26, 9]
+  bollinger: { period: 20, std: 2 }
+  atr_period: 14
+  adx_period: 14
+  ema_windows: [9, 21, 50, 200]
+  sma_windows: [9, 21, 50, 200]
+dead_zone_std_multiplier: 0.25
+processed_data_dir: "data/processed"
