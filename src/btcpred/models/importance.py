@@ -29,3 +29,29 @@ def compute_shap_importance(model: object, X_sample: pd.DataFrame) -> pd.Series:
 
     importance = pd.Series(abs_values.mean(axis=0), index=X_sample.columns)
     return importance.sort_values(ascending=False)
+
+
+def explain_single_prediction(
+    model: object, row: pd.DataFrame, top_n: int = 3
+) -> list[tuple[str, float]]:
+    """Local SHAP attribution for one specific prediction, not an aggregate importance.
+
+    Args:
+        model: A fitted tree-based estimator, or a Pipeline whose last step is one.
+        row: A single-row DataFrame (the exact features used for that one prediction).
+        top_n: Number of top-contributing features to return.
+
+    Returns:
+        Up to `top_n` (feature_name, signed_shap_value) pairs, sorted by |contribution|
+        descending. A positive value pushed the prediction up; negative pushed it down.
+    """
+    estimator = model.steps[-1][1] if hasattr(model, "steps") else model
+    explainer = shap.TreeExplainer(estimator)
+    shap_values = explainer.shap_values(row)
+
+    if isinstance(shap_values, list):
+        shap_values = shap_values[0]
+
+    contributions = pd.Series(shap_values[0], index=row.columns)
+    ranked = contributions.reindex(contributions.abs().sort_values(ascending=False).index)
+    return list(ranked.head(top_n).items())
