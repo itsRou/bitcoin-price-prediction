@@ -12,6 +12,9 @@ macro_tickers:
 sentiment:
   fear_greed_url: "https://api.alternative.me/fng/"
 onchain:
-  source: "blockchain.com"
+  hash_rate: "hash-rate"
+  active_addresses: "n-unique-addresses"
+  transaction_count: "n-transactions"
+  miner_revenue: "miners-revenue"
 raw_data_dir: "data/raw"
 manifest_path: "data/manifest.json"
