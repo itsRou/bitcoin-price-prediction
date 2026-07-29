@@ -1,0 +1,11 @@
+[
+  {
+    "source": "binance",
+    "dataset": "ohlcv_BTC/USDT_1d",
+    "rows": 2767,
+    "start": "2019-01-01T00:00:00+00:00",
+    "end": "2026-07-29T00:00:00+00:00",
+    "path": "data\\raw\\ohlcv_BTCUSDT_1d.parquet",
+    "fetched_at": "2026-07-29T16:41:28.294995+00:00"
+  }
+]

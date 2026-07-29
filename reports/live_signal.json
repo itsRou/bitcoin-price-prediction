@@ -1,0 +1,95 @@
+{
+  "generated_at": "2026-07-29T16:45:27.321922+00:00",
+  "as_of_date": "2026-07-28",
+  "current_price": 63915.0,
+  "predicted_log_return": 0.00010721650131729987,
+  "predicted_next_price": 63921.85311005837,
+  "dead_zone_threshold": 0.00412266857835993,
+  "signal": "HOLD",
+  "model": "random_forest",
+  "model_description": "An ensemble of decision trees, each voting on a bootstrapped subset of history.",
+  "selection_reason": "Lowest mean absolute error among the 8 curated models over the preceding 20 out-of-fold predictions on real BTC/USDT data.",
+  "recent_stats": {
+    "rmse": 0.02551697442752848,
+    "mae": 0.018753763334042918,
+    "r2": -0.14970405374478335,
+    "directional_accuracy": 0.5240963855421686,
+    "n_predictions": 830
+  },
+  "leaderboard": {
+    "buy_and_hold": {
+      "rmse": 0.023797966139856217,
+      "mae": 0.016957853573057687,
+      "r2": -1.7017199668067917e-05,
+      "directional_accuracy": 0.4951807228915663,
+      "n_predictions": 830
+    },
+    "naive_zero": {
+      "rmse": 0.02379776372540702,
+      "mae": 0.01695665659723596,
+      "r2": -5.911249711942901e-09,
+      "directional_accuracy": 0.0,
+      "n_predictions": 830
+    },
+    "auto_arima": {
+      "rmse": 0.023863964509905983,
+      "mae": 0.01702529480724007,
+      "r2": -0.005571358291829309,
+      "directional_accuracy": 0.39036144578313253,
+      "n_predictions": 830
+    },
+    "ridge": {
+      "rmse": 0.04015941353907808,
+      "mae": 0.028202705153063553,
+      "r2": -1.8477537338439274,
+      "directional_accuracy": 0.5048192771084338,
+      "n_predictions": 830
+    },
+    "random_forest": {
+      "rmse": 0.02551697442752848,
+      "mae": 0.018753763334042918,
+      "r2": -0.14970405374478335,
+      "directional_accuracy": 0.5240963855421686,
+      "n_predictions": 830
+    },
+    "xgboost": {
+      "rmse": 0.02752092785168221,
+      "mae": 0.02010605266982453,
+      "r2": -0.33737699833240997,
+      "directional_accuracy": 0.4891566265060241,
+      "n_predictions": 830
+    },
+    "lstm": {
+      "rmse": 0.11386878143404448,
+      "mae": 0.08396346330851487,
+      "r2": -21.89481043671075,
+      "directional_accuracy": 0.5156626506024097,
+      "n_predictions": 830
+    },
+    "transformer": {
+      "rmse": 0.14372131385954873,
+      "mae": 0.0731274135339529,
+      "r2": -35.472880470857916,
+      "directional_accuracy": 0.5060240963855421,
+      "n_predictions": 830
+    }
+  },
+  "top_features": [
+    [
+      "macd_hist",
+      0.0033241789499443113
+    ],
+    [
+      "ema_200",
+      -0.002818771671649464
+    ],
+    [
+      "sma_200",
+      -0.00212590801879324
+    ]
+  ],
+  "horizon_days": 1,
+  "lookback_rows": 900,
+  "data_source": "BTC/USDT daily candles via Binance (ccxt)",
+  "disclaimer": "Educational research demo, not investment advice. This signal comes from models with directional accuracy near a coin flip on out-of-sample data (see the leaderboard) and does not account for trading fees, slippage, or risk management. Do not use this to make real trading decisions."
+}
