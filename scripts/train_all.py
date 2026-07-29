@@ -1,0 +1,136 @@
+"""Run every registered regression model through purged walk-forward CV and rank them.
+
+Like `run_baselines.py`, this runs against synthetic OHLCV data (no real BTC history has
+been fetched yet) -- it validates that the full registry of ~30 models (Tier 0 baselines
+through Tier 3 deep learning) all fit/predict correctly inside the walk-forward harness,
+and produces a leaderboard shape. Treat it as "the harness works end-to-end," not "here is
+model performance" -- rerun against real fetched data once available.
+
+A handful of models are expected to occasionally fail on a given fold (e.g. VAR needs
+enough non-degenerate rows, GaussianProcess-style models don't apply here at all) --
+failures are caught per (model, fold) so one bad combination doesn't kill the whole sweep.
+"""
+
+from __future__ import annotations
+
+from collections.abc import Callable
+from pathlib import Path
+from typing import Any
+
+import numpy as np
+import pandas as pd
+from btcpred.features.build import build_feature_matrix
+from btcpred.models.deep import TrainingConfig
+from btcpred.models.registry import DEEP_ARCHITECTURES, get_regression_registry
+from btcpred.validation.metrics import directional_accuracy, mae, r_squared, rmse
+from btcpred.validation.splitters import PurgedWalkForwardSplit
+
+HORIZON = 1
+N_SPLITS = 3
+N_ROWS = 500
+REPORTS_PATH = Path("reports/results.md")
+
+# Skip models that need per-instance configuration to be meaningful (ARIMAX/VAR without
+# exogenous columns degrade to plain AR) or that predict a different target entirely
+# (GARCH forecasts volatility, not returns) -- see their docstrings for why.
+SKIPPED_MODELS = {"var"}
+
+_FAST_DEEP_CONFIG = TrainingConfig(max_epochs=15, patience=4, batch_size=16, val_fraction=0.2)
+
+
+def _make_synthetic_ohlcv(n: int = N_ROWS, seed: int = 1) -> pd.DataFrame:
+    idx = pd.date_range("2018-01-01", periods=n, freq="D", tz="UTC")
+    rng = np.random.default_rng(seed)
+    log_returns = rng.normal(0.0002, 0.03, n)
+    close = 5_000 * np.exp(np.cumsum(log_returns))
+    high = close * (1 + rng.uniform(0, 0.015, n))
+    low = close * (1 - rng.uniform(0, 0.015, n))
+    open_ = close * (1 + rng.normal(0, 0.005, n))
+    volume = rng.uniform(1_000, 10_000, n)
+    return pd.DataFrame(
+        {"open": open_, "high": high, "low": low, "close": close, "volume": volume}, index=idx
+    )
+
+
+def _build_model(name: str, factory: Callable[[], Any]) -> Any:
+    model = factory()
+    if name in DEEP_ARCHITECTURES:
+        model.config = _FAST_DEEP_CONFIG
+    return model
+
+
+def _evaluate_model(
+    name: str,
+    factory: Callable[[], Any],
+    X: pd.DataFrame,
+    y: pd.Series,
+    splitter: PurgedWalkForwardSplit,
+) -> dict[str, float] | None:
+    fold_metrics = []
+    for train_idx, test_idx in splitter.split(X):
+        try:
+            model = _build_model(name, factory)
+            model.fit(X.iloc[train_idx], y.iloc[train_idx])
+            preds = np.asarray(model.predict(X.iloc[test_idx]))
+            y_test = y.iloc[test_idx].to_numpy()
+            fold_metrics.append(
+                {
+                    "rmse": rmse(y_test, preds),
+                    "mae": mae(y_test, preds),
+                    "r2": r_squared(y_test, preds),
+                    "directional_accuracy": directional_accuracy(y_test, preds),
+                }
+            )
+        except Exception as exc:  # noqa: BLE001 - isolate one bad (model, fold) combination
+            print(f"  [skip] {name} failed on a fold: {exc}")
+    if not fold_metrics:
+        return None
+    return {k: float(np.mean([fm[k] for fm in fold_metrics])) for k in fold_metrics[0]}
+
+
+def _to_markdown_table(df: pd.DataFrame) -> str:
+    header = f"| model | {' | '.join(df.columns)} |"
+    separator = f"|{'---|' * (len(df.columns) + 1)}"
+    rows = [
+        f"| {name} | {' | '.join(f'{value:.6f}' for value in row)} |"
+        for name, row in zip(df.index, df.to_numpy(), strict=True)
+    ]
+    return "\n".join([header, separator, *rows])
+
+
+def main() -> None:
+    ohlcv = _make_synthetic_ohlcv()
+    matrix = build_feature_matrix(ohlcv, horizons=(HORIZON,))
+    feature_cols = [c for c in matrix.columns if not c.startswith(("y_reg_", "y_clf_"))]
+    matrix = matrix.dropna(subset=[*feature_cols, f"y_reg_h{HORIZON}"])
+
+    X = matrix[feature_cols]
+    y = matrix[f"y_reg_h{HORIZON}"]
+    splitter = PurgedWalkForwardSplit(n_splits=N_SPLITS, purge=HORIZON, embargo=HORIZON)
+
+    registry = get_regression_registry()
+    results = {}
+    for name, factory in registry.items():
+        if name in SKIPPED_MODELS:
+            continue
+        print(f"Evaluating {name}...")
+        metrics = _evaluate_model(name, factory, X, y, splitter)
+        if metrics is not None:
+            results[name] = metrics
+
+    leaderboard = pd.DataFrame(results).T.sort_values("rmse")
+
+    REPORTS_PATH.parent.mkdir(parents=True, exist_ok=True)
+    REPORTS_PATH.write_text(
+        "# Full model leaderboard (harness smoke test -- synthetic data)\n\n"
+        "Generated by `scripts/train_all.py`. Runs every registered regression model "
+        "(Tier 0 baselines through Tier 3 deep learning) through purged walk-forward CV "
+        "on synthetic OHLCV data. This validates the harness end-to-end -- it is **not** "
+        "a real performance result. Rerun against real fetched BTC data once available.\n\n"
+        f"{_to_markdown_table(leaderboard)}\n"
+    )
+    print(leaderboard)
+
+
+if __name__ == "__main__":
+    main()

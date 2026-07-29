@@ -2,6 +2,10 @@
 
 from __future__ import annotations
 
+import matplotlib
+
+matplotlib.use("Agg")  # headless backend, must be set before any test imports pyplot
+
 import numpy as np
 import pandas as pd
 import pytest
