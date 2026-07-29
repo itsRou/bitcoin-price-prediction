@@ -7,7 +7,7 @@
 
 ## Status
 
-🚧 Phase 5 (classical + boosting sweep) — up next. See [Roadmap](#roadmap).
+🚧 Phase 6 (deep learning sweep) — up next. See [Roadmap](#roadmap).
 
 ## What this project does
 
@@ -48,8 +48,8 @@ btcpred report     # leaderboard + tearsheet
 | 2. Data layer | OHLCV/macro/on-chain/sentiment fetchers, cleaning, daily merge | ✅ done |
 | 3. Features | technical/return/regime/exogenous features, leakage-safe assembly | ✅ done |
 | 4. Validation harness | purged walk-forward CV, metrics, Diebold-Mariano, Tier-0 baselines | ✅ done |
-| 5. Classical + boosting sweep | linear/trees/SVM/KNN + XGBoost/LightGBM/CatBoost | 🚧 in progress |
-| 6. Deep learning sweep | LSTM/GRU/CNN/Transformer/TCN in PyTorch | ⬜ |
+| 5. Classical + boosting sweep | linear/trees/SVM/KNN + XGBoost/LightGBM/CatBoost | ✅ done |
+| 6. Deep learning sweep | LSTM/GRU/CNN/Transformer/TCN in PyTorch | 🚧 in progress |
 | 7. Ensembles + backtest | stacking, regime-conditional selection, cost-aware backtest | ⬜ |
 | 8. Reporting + app | Streamlit dashboard, leaderboard, final README | ⬜ |
 

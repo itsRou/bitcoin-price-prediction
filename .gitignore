@@ -24,6 +24,8 @@ models/*
 !models/.gitkeep
 mlruns/
 mlartifacts/
+catboost_info/
+*.db
 
 # Reports (generated)
 reports/figures/*
