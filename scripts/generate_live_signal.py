@@ -1,4 +1,4 @@
-"""Generate today's real BUY/SELL/HOLD signal from live BTC/USDT market data.
+"""Generate today's real BUY/SELL/HOLD signal from live BTC market data.
 
 Unlike `generate_prediction_dataset.py` (which evaluates models on historical, already-
 resolved dates for the web explorer's backtest view), this script fetches *current* BTC
@@ -8,6 +8,10 @@ return from the latest closed daily candle to the next one. The predicted return
 into a BUY/SELL/HOLD signal using the same volatility-scaled dead-zone rule already used for
 the project's 3-class classification target (`btcpred.features.build.compute_targets`), so
 the live signal is methodologically consistent with the rest of the benchmark.
+
+Data comes from Yahoo Finance (`BTC-USD`) rather than the ccxt/Binance fetcher used
+elsewhere in this project: Binance rejects requests from GitHub Actions' US-hosted runners
+with an HTTP 451 geo-restriction, which would break the nightly scheduled refresh.
 
 This is a research/educational demo, not investment advice -- see the "disclaimer" field in
 the output and the site's honest-limitations section.
@@ -22,8 +26,8 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+import yfinance as yf
 
-from btcpred.data.fetch import fetch_ohlcv
 from btcpred.features.build import (
     DEFAULT_DEAD_ZONE_STD_MULTIPLIER,
     TARGET_VOL_WINDOW,
@@ -36,8 +40,7 @@ from btcpred.models.selection import select_best_model_by_rolling_error
 from btcpred.validation.metrics import directional_accuracy, mae, r_squared, rmse
 from btcpred.validation.splitters import PurgedWalkForwardSplit
 
-SYMBOL = "BTC/USDT"
-TIMEFRAME = "1d"
+TICKER = "BTC-USD"
 START_DATE = "2019-01-01"
 HORIZON = 1
 N_SPLITS = 12
@@ -90,8 +93,19 @@ def _drop_forming_candle(ohlcv: pd.DataFrame) -> pd.DataFrame:
     return ohlcv
 
 
+def _fetch_btc_ohlcv(start_date: str) -> pd.DataFrame:
+    """Fetch daily BTC-USD candles from Yahoo Finance, normalized to lowercase OHLCV."""
+    raw = yf.download(TICKER, start=start_date, progress=False, auto_adjust=True)
+    if isinstance(raw.columns, pd.MultiIndex):
+        raw.columns = raw.columns.get_level_values(0)
+    raw = raw.rename(columns=str.lower)
+    raw.index = pd.to_datetime(raw.index, utc=True)
+    raw.index.name = "timestamp"
+    return raw[["open", "high", "low", "close", "volume"]]
+
+
 def main() -> None:
-    ohlcv = fetch_ohlcv(symbol=SYMBOL, timeframe=TIMEFRAME, start_date=START_DATE)
+    ohlcv = _fetch_btc_ohlcv(START_DATE)
     ohlcv = _drop_forming_candle(ohlcv)
 
     matrix = build_feature_matrix(ohlcv, horizons=(HORIZON,))
@@ -186,7 +200,7 @@ def main() -> None:
         ),
         "horizon_days": HORIZON,
         "lookback_rows": LOOKBACK_ROWS,
-        "data_source": f"{SYMBOL} daily candles via Binance (ccxt)",
+        "data_source": f"{TICKER} daily candles via Yahoo Finance",
         "disclaimer": (
             "Educational research demo, not investment advice. This signal comes from "
             "models with directional accuracy near a coin flip on out-of-sample data "
