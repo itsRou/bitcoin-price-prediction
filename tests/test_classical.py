@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+
 from btcpred.models.classical import get_classification_models, get_regression_models
 
 

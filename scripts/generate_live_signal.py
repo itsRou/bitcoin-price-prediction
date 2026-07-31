@@ -22,6 +22,7 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+
 from btcpred.data.fetch import fetch_ohlcv
 from btcpred.features.build import (
     DEFAULT_DEAD_ZONE_STD_MULTIPLIER,

@@ -4,8 +4,9 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
-from btcpred.models.importance import compute_shap_importance, explain_single_prediction
 from sklearn.ensemble import RandomForestRegressor
+
+from btcpred.models.importance import compute_shap_importance, explain_single_prediction
 
 
 def test_compute_shap_importance_ranks_the_informative_feature_first() -> None:

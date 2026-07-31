@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+
 from btcpred.features.build import build_feature_matrix, compute_targets
 
 

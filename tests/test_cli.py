@@ -2,8 +2,9 @@
 
 from __future__ import annotations
 
-from btcpred.cli import app
 from typer.testing import CliRunner
+
+from btcpred.cli import app
 
 runner = CliRunner()
 

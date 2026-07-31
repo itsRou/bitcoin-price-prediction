@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pandas as pd
+
 from btcpred.backtest.report import compute_tearsheet, format_tearsheet_markdown
 
 EXPECTED_KEYS = (

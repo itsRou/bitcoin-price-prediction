@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+from matplotlib.figure import Figure
+
 from btcpred.viz.plots import (
     plot_confusion_matrix,
     plot_equity_curve,
@@ -11,7 +13,6 @@ from btcpred.viz.plots import (
     plot_predictions_vs_actual,
     plot_regime_performance,
 )
-from matplotlib.figure import Figure
 
 
 def test_plot_equity_curve_returns_figure() -> None:

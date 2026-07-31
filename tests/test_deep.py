@@ -6,6 +6,7 @@ import numpy as np
 import pandas as pd
 import pytest
 import torch
+
 from btcpred.models.deep import (
     Architecture,
     TorchSequenceRegressor,

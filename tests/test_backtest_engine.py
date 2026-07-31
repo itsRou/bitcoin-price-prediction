@@ -5,6 +5,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 import pytest
+
 from btcpred.backtest.engine import run_backtest, size_positions
 
 

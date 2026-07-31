@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pytest
+
 from btcpred.models.registry import get_classification_registry, get_model, get_regression_registry
 
 

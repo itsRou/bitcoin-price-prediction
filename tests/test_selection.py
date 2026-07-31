@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 import pandas as pd
+
 from btcpred.models.selection import select_best_model_by_rolling_error
 
 

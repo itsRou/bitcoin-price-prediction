@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import pandas as pd
+
 from btcpred.features.technical import compute_technical_features
 
 

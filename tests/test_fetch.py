@@ -10,6 +10,7 @@ import pandas as pd
 import pytest
 import requests
 import responses
+
 from btcpred.data.fetch import (
     _fetch_ohlcv_batch,
     _request_with_backoff,

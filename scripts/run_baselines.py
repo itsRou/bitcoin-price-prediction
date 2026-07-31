@@ -16,6 +16,7 @@ from typing import Any
 
 import numpy as np
 import pandas as pd
+
 from btcpred.features.build import build_feature_matrix
 from btcpred.models.baselines import (
     BuyAndHoldRegressor,
