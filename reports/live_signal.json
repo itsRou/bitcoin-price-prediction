@@ -1,80 +1,93 @@
 {
-  "generated_at": "2026-08-06T03:37:38.560225+00:00",
-  "as_of_date": "2026-08-04",
-  "current_price": 64055.953125,
-  "predicted_log_return": 0.0001,
-  "predicted_next_price": 64062.35904060295,
-  "dead_zone_threshold": 0.0038453512735975312,
-  "signal": "HOLD",
-  "model": "buy_and_hold",
-  "model_description": "Always predicts a small fixed positive return -- the 'stay long' baseline.",
+  "generated_at": "2026-08-07T03:17:20.547403+00:00",
+  "as_of_date": "2026-08-05",
+  "current_price": 64597.5,
+  "predicted_log_return": 0.00597447459170823,
+  "predicted_next_price": 64984.59130460631,
+  "dead_zone_threshold": 0.0038512038531726936,
+  "signal": "BUY",
+  "model": "random_forest",
+  "model_description": "An ensemble of decision trees, each voting on a bootstrapped subset of history.",
   "selection_reason": "Lowest mean absolute error among the 8 curated models over the preceding 20 out-of-fold predictions on real BTC/USDT data.",
   "recent_stats": {
-    "rmse": 0.023956165344089,
-    "mae": 0.017034964269156933,
-    "r2": -1.5505701062457078e-05,
-    "directional_accuracy": 0.4951807228915663,
+    "rmse": 0.026104849903528533,
+    "mae": 0.019261689779968685,
+    "r2": -0.1873417662781256,
+    "directional_accuracy": 0.516867469879518,
     "n_predictions": 830
   },
   "leaderboard": {
     "buy_and_hold": {
-      "rmse": 0.023956165344089,
-      "mae": 0.017034964269156933,
-      "r2": -1.5505701062457078e-05,
-      "directional_accuracy": 0.4951807228915663,
+      "rmse": 0.023957175767013835,
+      "mae": 0.017038496586511687,
+      "r2": -1.055134534500013e-05,
+      "directional_accuracy": 0.4963855421686747,
       "n_predictions": 830
     },
     "naive_zero": {
-      "rmse": 0.02395598028817521,
-      "mae": 0.017033618792895684,
-      "r2": -5.597730368123166e-08,
+      "rmse": 0.02395705964583746,
+      "mae": 0.01703739207410586,
+      "r2": -8.572043228571857e-07,
       "directional_accuracy": 0.0,
       "n_predictions": 830
     },
     "auto_arima": {
-      "rmse": 0.023949796534185788,
-      "mae": 0.017023656290400254,
-      "r2": 0.0005161371532094172,
-      "directional_accuracy": 0.3686746987951807,
+      "rmse": 0.024010675247931657,
+      "mae": 0.01710723552712765,
+      "r2": -0.004481844806692559,
+      "directional_accuracy": 0.363855421686747,
       "n_predictions": 830
     },
     "ridge": {
-      "rmse": 0.03576959392026921,
-      "mae": 0.027151033275516538,
-      "r2": -1.2294623867019117,
-      "directional_accuracy": 0.5012048192771085,
+      "rmse": 0.034598239737911325,
+      "mae": 0.026183474038566464,
+      "r2": -1.0856496232643873,
+      "directional_accuracy": 0.5,
       "n_predictions": 830
     },
     "random_forest": {
-      "rmse": 0.02611898042506898,
-      "mae": 0.01910704159242999,
-      "r2": -0.188733686578739,
-      "directional_accuracy": 0.5048192771084338,
+      "rmse": 0.026104849903528533,
+      "mae": 0.019261689779968685,
+      "r2": -0.1873417662781256,
+      "directional_accuracy": 0.516867469879518,
       "n_predictions": 830
     },
     "xgboost": {
-      "rmse": 0.026102028904836202,
-      "mae": 0.018823798821533354,
-      "r2": -0.18719118348355557,
-      "directional_accuracy": 0.4951807228915663,
+      "rmse": 0.025954161737451534,
+      "mae": 0.01895827081428527,
+      "r2": -0.17367365801799717,
+      "directional_accuracy": 0.4939759036144578,
       "n_predictions": 830
     },
     "lstm": {
-      "rmse": 0.11268464281707556,
-      "mae": 0.08218891189737497,
-      "r2": -21.12593310584519,
-      "directional_accuracy": 0.5036144578313253,
+      "rmse": 0.10929420436571995,
+      "mae": 0.07937847986858429,
+      "r2": -19.81266096717303,
+      "directional_accuracy": 0.4939759036144578,
       "n_predictions": 830
     },
     "transformer": {
-      "rmse": 0.07129714159058642,
-      "mae": 0.044315280715924096,
-      "r2": -7.857606189052019,
-      "directional_accuracy": 0.5144578313253012,
+      "rmse": 0.21762431901607632,
+      "mae": 0.08720705034431507,
+      "r2": -81.5179051728812,
+      "directional_accuracy": 0.516867469879518,
       "n_predictions": 830
     }
   },
-  "top_features": null,
+  "top_features": [
+    [
+      "macd_hist",
+      0.00762230244046879
+    ],
+    [
+      "return_kurt_7",
+      0.002945799068244475
+    ],
+    [
+      "atr_14",
+      -0.0024638154505183794
+    ]
+  ],
   "horizon_days": 1,
   "lookback_rows": 900,
   "data_source": "BTC-USD daily candles via Yahoo Finance",
