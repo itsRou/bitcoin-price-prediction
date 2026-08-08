@@ -1,91 +1,91 @@
 {
-  "generated_at": "2026-08-07T03:17:20.547403+00:00",
-  "as_of_date": "2026-08-05",
-  "current_price": 64597.5,
-  "predicted_log_return": 0.00597447459170823,
-  "predicted_next_price": 64984.59130460631,
-  "dead_zone_threshold": 0.0038512038531726936,
-  "signal": "BUY",
+  "generated_at": "2026-08-08T02:22:33.097681+00:00",
+  "as_of_date": "2026-08-06",
+  "current_price": 64262.11328125,
+  "predicted_log_return": -0.007778897194330021,
+  "predicted_next_price": 63764.1641669861,
+  "dead_zone_threshold": 0.00382375593573551,
+  "signal": "SELL",
   "model": "random_forest",
   "model_description": "An ensemble of decision trees, each voting on a bootstrapped subset of history.",
   "selection_reason": "Lowest mean absolute error among the 8 curated models over the preceding 20 out-of-fold predictions on real BTC/USDT data.",
   "recent_stats": {
-    "rmse": 0.026104849903528533,
-    "mae": 0.019261689779968685,
-    "r2": -0.1873417662781256,
-    "directional_accuracy": 0.516867469879518,
+    "rmse": 0.026096754584673056,
+    "mae": 0.01913951264321676,
+    "r2": -0.186596173658228,
+    "directional_accuracy": 0.5,
     "n_predictions": 830
   },
   "leaderboard": {
     "buy_and_hold": {
-      "rmse": 0.023957175767013835,
-      "mae": 0.017038496586511687,
-      "r2": -1.055134534500013e-05,
+      "rmse": 0.02395727108929087,
+      "mae": 0.017038942579877616,
+      "r2": -1.0672550790680191e-05,
       "directional_accuracy": 0.4963855421686747,
       "n_predictions": 830
     },
     "naive_zero": {
-      "rmse": 0.02395705964583746,
-      "mae": 0.01703739207410586,
-      "r2": -8.572043228571857e-07,
+      "rmse": 0.02395715310694736,
+      "mae": 0.017037838067471788,
+      "r2": -8.230723818059005e-07,
       "directional_accuracy": 0.0,
       "n_predictions": 830
     },
     "auto_arima": {
-      "rmse": 0.024010675247931657,
-      "mae": 0.01710723552712765,
-      "r2": -0.004481844806692559,
-      "directional_accuracy": 0.363855421686747,
+      "rmse": 0.02397601065509328,
+      "mae": 0.017052094381010033,
+      "r2": -0.0015757168271257616,
+      "directional_accuracy": 0.43132530120481927,
       "n_predictions": 830
     },
     "ridge": {
-      "rmse": 0.034598239737911325,
-      "mae": 0.026183474038566464,
-      "r2": -1.0856496232643873,
-      "directional_accuracy": 0.5,
+      "rmse": 0.034585815422385105,
+      "mae": 0.026367018754176234,
+      "r2": -1.0841356356954441,
+      "directional_accuracy": 0.4987951807228916,
       "n_predictions": 830
     },
     "random_forest": {
-      "rmse": 0.026104849903528533,
-      "mae": 0.019261689779968685,
-      "r2": -0.1873417662781256,
-      "directional_accuracy": 0.516867469879518,
+      "rmse": 0.026096754584673056,
+      "mae": 0.01913951264321676,
+      "r2": -0.186596173658228,
+      "directional_accuracy": 0.5,
       "n_predictions": 830
     },
     "xgboost": {
-      "rmse": 0.025954161737451534,
-      "mae": 0.01895827081428527,
-      "r2": -0.17367365801799717,
-      "directional_accuracy": 0.4939759036144578,
+      "rmse": 0.025536147534064295,
+      "mae": 0.018480447459071167,
+      "r2": -0.13616314703367727,
+      "directional_accuracy": 0.5204819277108433,
       "n_predictions": 830
     },
     "lstm": {
-      "rmse": 0.10929420436571995,
-      "mae": 0.07937847986858429,
-      "r2": -19.81266096717303,
+      "rmse": 0.10809386711431748,
+      "mae": 0.07896706646624682,
+      "r2": -19.35785651716654,
       "directional_accuracy": 0.4939759036144578,
       "n_predictions": 830
     },
     "transformer": {
-      "rmse": 0.21762431901607632,
-      "mae": 0.08720705034431507,
-      "r2": -81.5179051728812,
-      "directional_accuracy": 0.516867469879518,
+      "rmse": 0.2024010906395691,
+      "mae": 0.07591292799966715,
+      "r2": -70.37656396746324,
+      "directional_accuracy": 0.4963855421686747,
       "n_predictions": 830
     }
   },
   "top_features": [
     [
       "macd_hist",
-      0.00762230244046879
+      0.00530285615917545
     ],
     [
       "return_kurt_7",
-      0.002945799068244475
+      0.003059498809841684
     ],
     [
       "atr_14",
-      -0.0024638154505183794
+      -0.0024875750744704477
     ]
   ],
   "horizon_days": 1,
