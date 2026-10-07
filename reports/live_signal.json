@@ -1,76 +1,76 @@
 {
-  "generated_at": "2026-10-06T06:19:55.547365+00:00",
-  "as_of_date": "2026-10-04",
-  "current_price": 86480.3046875,
-  "predicted_log_return": 0.0002559326821938157,
-  "predicted_next_price": 86502.44065637371,
-  "dead_zone_threshold": 0.00486924065019944,
+  "generated_at": "2026-10-07T05:58:34.575176+00:00",
+  "as_of_date": "2026-10-05",
+  "current_price": 85786.59375,
+  "predicted_log_return": 0.0001,
+  "predicted_next_price": 85795.17283832227,
+  "dead_zone_threshold": 0.004894046007675503,
   "signal": "HOLD",
-  "model": "xgboost",
-  "model_description": "Gradient-boosted decision trees that iteratively correct the previous trees' errors.",
+  "model": "buy_and_hold",
+  "model_description": "Always predicts a small fixed positive return -- the 'stay long' baseline.",
   "selection_reason": "Lowest mean absolute error among the 8 curated models over the preceding 20 out-of-fold predictions on real BTC/USDT data.",
   "recent_stats": {
-    "rmse": 0.025321236028198104,
-    "mae": 0.01826990729362869,
-    "r2": -0.12755327366202152,
-    "directional_accuracy": 0.4867469879518072,
+    "rmse": 0.023845748912113385,
+    "mae": 0.016780908065392636,
+    "r2": -0.00015718966455668948,
+    "directional_accuracy": 0.5,
     "n_predictions": 830
   },
   "leaderboard": {
     "buy_and_hold": {
-      "rmse": 0.023848250038939752,
-      "mae": 0.01678658348179127,
-      "r2": -0.0001849150387405185,
-      "directional_accuracy": 0.5012048192771085,
+      "rmse": 0.023845748912113385,
+      "mae": 0.016780908065392636,
+      "r2": -0.00015718966455668948,
+      "directional_accuracy": 0.5,
       "n_predictions": 830
     },
     "naive_zero": {
-      "rmse": 0.023849819355276913,
-      "mae": 0.01678664678416434,
-      "r2": -0.00031655221699766756,
+      "rmse": 0.023847212202693313,
+      "mae": 0.016780730403910284,
+      "r2": -0.00027994240374185075,
       "directional_accuracy": 0.0,
       "n_predictions": 830
     },
     "auto_arima": {
-      "rmse": 0.023922805693431092,
-      "mae": 0.016862374319065312,
-      "r2": -0.006448351751012105,
-      "directional_accuracy": 0.07349397590361446,
+      "rmse": 0.023857823737556825,
+      "mae": 0.016794555387122597,
+      "r2": -0.0011703498034583149,
+      "directional_accuracy": 0.16265060240963855,
       "n_predictions": 830
     },
     "ridge": {
-      "rmse": 0.04617161002560397,
-      "mae": 0.03216351013182752,
-      "r2": -2.749016095811364,
-      "directional_accuracy": 0.4867469879518072,
-      "n_predictions": 830
-    },
-    "random_forest": {
-      "rmse": 0.025982136300898812,
-      "mae": 0.0190863400383382,
-      "r2": -0.1871811183928087,
+      "rmse": 0.03455803589808532,
+      "mae": 0.025973063450846837,
+      "r2": -1.1006051735833897,
       "directional_accuracy": 0.5,
       "n_predictions": 830
     },
+    "random_forest": {
+      "rmse": 0.025965004510859018,
+      "mae": 0.019049111420253406,
+      "r2": -0.18583190975326147,
+      "directional_accuracy": 0.5216867469879518,
+      "n_predictions": 830
+    },
     "xgboost": {
-      "rmse": 0.025321236028198104,
-      "mae": 0.01826990729362869,
-      "r2": -0.12755327366202152,
-      "directional_accuracy": 0.4867469879518072,
+      "rmse": 0.025237796615869678,
+      "mae": 0.018127372434890383,
+      "r2": -0.12033834437405,
+      "directional_accuracy": 0.5024096385542168,
       "n_predictions": 830
     },
     "lstm": {
-      "rmse": 0.14152898644600917,
-      "mae": 0.09562435654354612,
-      "r2": -34.225572508076894,
-      "directional_accuracy": 0.4951807228915663,
+      "rmse": 0.14105665574667264,
+      "mae": 0.09493556288587884,
+      "r2": -33.99721569424677,
+      "directional_accuracy": 0.4963855421686747,
       "n_predictions": 830
     },
     "transformer": {
-      "rmse": 0.04158081197237116,
-      "mae": 0.028082161179903913,
-      "r2": -2.040557346585845,
-      "directional_accuracy": 0.472289156626506,
+      "rmse": 0.07180178875675282,
+      "mae": 0.04018824513027141,
+      "r2": -8.068111579799208,
+      "directional_accuracy": 0.4927710843373494,
       "n_predictions": 830
     }
   },
