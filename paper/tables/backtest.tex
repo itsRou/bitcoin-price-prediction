@@ -1,0 +1,24 @@
+\begin{table}[t]
+\centering
+\caption{Cost-aware backtests of 1-day forecasts (0.10\% fee + 0.05\% slippage per unit of position change). Top six trading strategies by Sharpe ratio and medians over all 60 model-driven strategies. L/F = long/flat, L/S = long/short, DD = maximum drawdown, Turn. = mean daily turnover.}
+\label{tab:backtest}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lrrrr}
+\toprule
+Strategy & Sharpe & CAGR\% & DD\% & Turn. \\
+\midrule
+Buy \& hold & 0.80 & 34.9 & -76.6 & 0.00 \\
+\midrule
+GRU (L/F) & 0.82 & 25.6 & -54.4 & 0.12 \\
+SVR (L/F) & 0.79 & 29.3 & -58.4 & 0.09 \\
+Random forest (L/F) & 0.68 & 18.2 & -56.0 & 0.17 \\
+MLP (L/F) & 0.65 & 20.1 & -57.0 & 0.05 \\
+LSTM + attention (L/F) & 0.58 & 16.9 & -59.5 & 0.02 \\
+LightGBM (L/F) & 0.56 & 16.5 & -70.8 & 0.08 \\
+\midrule
+Median L/S (n=30) & -0.45 & -36.0 & -97.6 & 0.23 \\
+Median L/F (n=30) & 0.25 & 2.0 & -70.8 & 0.12 \\
+\bottomrule
+\end{tabular}
+\end{table}

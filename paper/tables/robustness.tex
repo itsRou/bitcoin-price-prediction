@@ -1,0 +1,31 @@
+\begin{table}[t]
+\centering
+\caption{Robustness: 1-day results with all 66 features vs.\ 53 stationary features (13 price-level features removed). $R^2_{OS}$ in \%; $p_{\mathrm{Holm}}$ from the DM test against the zero forecast, adjusted over the 16 models shown; DA in \%.}
+\label{tab:robust}
+\footnotesize
+\setlength{\tabcolsep}{3.5pt}
+\begin{tabular}{lrrrrr}
+\toprule
+ & \multicolumn{2}{c}{All features} & \multicolumn{3}{c}{Stationary only} \\
+\cmidrule(lr){2-3}\cmidrule(lr){4-6}
+Model & $R^2_{OS}$ & $p_{\mathrm{Holm}}$ & $R^2_{OS}$ & $p_{\mathrm{Holm}}$ & DA \\
+\midrule
+CatBoost & -0.42 & 0.133 & -0.31 & 0.233 & 49.2 \\
+LightGBM & -0.88 & 0.019 & -0.70 & 0.233 & 49.6 \\
+XGBoost & -9.93 & $<$0.001 & -12.22 & $<$0.001 & 51.4 \\
+Bayesian ridge & -11.40 & $<$0.001 & -0.79 & 0.233 & 48.7 \\
+$k$-NN & -33.60 & $<$0.001 & -33.87 & $<$0.001 & 50.7 \\
+SVR & -34.47 & $<$0.001 & -34.33 & $<$0.001 & 49.5 \\
+Random forest & -37.34 & $<$0.001 & -15.59 & $<$0.001 & 49.1 \\
+Extra trees & -39.08 & $<$0.001 & -10.46 & $<$0.001 & 50.0 \\
+CNN--LSTM & -52.57 & $<$0.001 & -17.23 & $<$0.001 & 48.7 \\
+Huber & -60.83 & $<$0.001 & -15.14 & $<$0.001 & 49.4 \\
+TCN & -110 & $<$0.001 & -16.21 & $<$0.001 & 49.1 \\
+Ridge & -146 & $<$0.001 & -47.02 & $<$0.001 & 48.3 \\
+OLS (all features) & -202 & $<$0.001 & -48.43 & $<$0.001 & 48.0 \\
+LSTM & -512 & $<$0.001 & -195 & $<$0.001 & 49.8 \\
+GRU & -1023 & $<$0.001 & -234 & $<$0.001 & 49.7 \\
+MLP & -9319 & $<$0.001 & -1744 & $<$0.001 & 50.3 \\
+\bottomrule
+\end{tabular}
+\end{table}

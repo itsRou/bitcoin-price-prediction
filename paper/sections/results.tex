@@ -1,0 +1,19 @@
+\section{Results}
+\label{sec:results}
+
+Each model produces 2{,}567 one-day and 2{,}561 seven-day out-of-sample forecasts over 13 folds from 20~September~2019 to 29~September~2026. No model failed on any fold.
+
+\subsection{Forecast accuracy: no model beats the random walk}
+Table~\ref{tab:main} and Fig.~\ref{fig:r2} summarize forecast accuracy. At the one-day horizon only two of the 32 models have a positive out-of-sample $R^2$: lag-1 OLS ($R^2_{OS} = 0.10\%$) and the constant ``always long'' forecast ($0.02\%$). Neither improvement is statistically meaningful (DM $p = 0.70$ and $0.22$ before any correction). At the seven-day horizon only the ``always long'' forecast is positive ($0.02\%$, DM $p = 0.10$, Holm-adjusted $p = 0.58$). \textbf{After the Holm correction, zero models are significantly more accurate than the zero forecast at either horizon.}
+
+The opposite is not true. Twenty-three of 32 models at $h=1$ and 25 of 32 at $h=7$ are significantly \emph{less} accurate than the zero forecast after correction. The models that escape this are exactly those whose forecasts stay close to zero: the trivial baselines, auto-ARIMA, lag-1 OLS, lasso, elastic net and CatBoost at both horizons, plus LightGBM and Holt--Winters at $h=1$ only. With library-default regularization, lasso and elastic net shrink every coefficient to zero and reproduce the mean-return baseline exactly; the regularizer itself finds no usable linear signal. Accuracy falls as model flexibility grows. The median $R^2_{OS}$ by family at $h=1$ is $-0.6\%$ for statistical models, $-5.4\%$ for gradient boosting, $-11\%$ for linear models, $-34\%$ for kernel methods, $-38\%$ for tree ensembles and $-481\%$ for deep learning. Fourteen models at $h=1$ and nineteen at $h=7$ have $R^2_{OS} < -50\%$, meaning their errors are substantially larger than those of predicting no change at all.
+
+\subsection{Directional accuracy is indistinguishable from a coin flip}
+At $h=1$, directional accuracy ranges from 47.0\% (RNN) to 51.1\% (random forest and LSTM with attention); 14 of 32 models exceed 50\% (Fig.~\ref{fig:da}). The most favourable one-sided binomial test, for random forest, gives $p = 0.13$ \emph{before} correction; after correction no model differs from 50\%. Stability across time is also absent. The five highest-accuracy models beat 50\% in only 7 to 9 of the 13 folds, roughly what chance alone produces.
+
+At $h=7$ the highest directional accuracy, 54.4\% for Holt--Winters, is a base-rate artefact rather than skill. Bitcoin rose in 52.8\% of the overlapping seven-day windows, Holt--Winters predicts a rise 61.5\% of the time, and its $R^2_{OS}$ is $-41\%$. A constant ``always up'' forecast attains 52.8\% at no cost.
+
+\subsection{Economic value: one of 60 strategies edges past buy-and-hold}
+Table~\ref{tab:backtest} and Fig.~\ref{fig:equity} report the cost-aware backtests at $h=1$. Buying and holding Bitcoin over the test period earned a compound annual growth rate (CAGR) of 34.9\% with a Sharpe ratio of 0.80 and a maximum drawdown of $-76.6\%$. Of the 60 model-driven strategies (30 non-trivial models $\times$ long/short and long/flat), none of the long/short strategies beats buy-and-hold on Sharpe ratio, and their median Sharpe is $-0.45$. Long/flat strategies fare better (median 0.25), because they inherit Bitcoin's upward drift whenever they are invested, but only one, GRU long/flat, exceeds buy-and-hold: Sharpe 0.82 versus 0.80, with a lower CAGR (25.6\%) and a shallower drawdown ($-54.4\%$).
+
+That single success is what chance predicts when 60 strategies are tried. Correcting the GRU's Sharpe ratio for the number of trials, the variance of Sharpe ratios across trials and the non-normality of its returns gives a deflated Sharpe ratio of 0.05, far below the 0.95 needed to call it a discovery \cite{bailey2014}. Its curve in Fig.~\ref{fig:equity} also shows long flat stretches out of the market rather than consistent timing.

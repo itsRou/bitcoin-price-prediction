@@ -1,0 +1,8 @@
+\section{Robustness: Removing Non-Stationary Features}
+\label{sec:robust}
+
+Thirteen of the 66 features are measured in price units: four EMAs, four SMAs, MACD and its signal and histogram, ATR and on-balance volume. Because Bitcoin rose more than tenfold from the start of the test period to its peak, their test-fold values often lie outside anything seen in training. To check whether these features alone drive the poor results, we re-ran 16 representative models at $h=1$ using only the 53 remaining, scale-free features. The rows, folds and protocol are exactly the same as in the main run.
+
+Table~\ref{tab:robust} shows that the price-level features explain a large part of the damage but not the absence of skill. Removing them improves $R^2_{OS}$ for 14 of the 16 models and raises the median from $-45.8\%$ to $-16.7\%$, with the largest gains for linear models, tree ensembles and recurrent networks. Yet \emph{no} model reaches a positive $R^2_{OS}$, none is significantly better than the zero forecast, and 13 of the 16 remain significantly worse after Holm correction (versus 15 of 16 with all features). The best directional accuracy, 51.4\% for XGBoost, is again not significant (one-sided binomial $p = 0.08$ before correction). The main conclusion is therefore not an artefact of feature scaling.
+
+\input{tables/robustness}

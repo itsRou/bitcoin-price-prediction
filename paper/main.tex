@@ -1,0 +1,96 @@
+\documentclass[conference]{IEEEtran}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath,amssymb}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{url}
+\usepackage[hidelinks]{hyperref}
+
+\graphicspath{{../reports/paper/}}
+
+\begin{document}
+
+\title{Can Machine Learning Beat a Random Walk in Bitcoin? A Leakage-Free Benchmark of 32 Models}
+
+\author{\IEEEauthorblockN{Rodayna Emad Mohamed}
+\IEEEauthorblockA{College of Computer Science and Artificial Intelligence\\
+Pharos University in Alexandria, Alexandria, Egypt\\
+rodynaemad@gmail.com}}
+
+\maketitle
+
+\begin{abstract}
+Machine learning studies of Bitcoin frequently report high forecasting accuracy, yet many evaluate on price levels, use leaky train/test splits, test on a single window, or ignore the number of models tried. We benchmark 32 forecasting models from six families against the random-walk (zero-return) forecast for 1-day and 7-day log returns: statistical models, linear and regularized regression, kernel methods, tree ensembles, gradient boosting and ten deep-learning architectures. All models share the same 66 leakage-guarded features and the same purged, embargoed, expanding-window walk-forward protocol, evaluated on 13 folds covering seven years (September 2019 to September 2026) of daily data. After Holm correction for multiple comparisons, \emph{no} model is significantly more accurate than the zero forecast at either horizon (Diebold--Mariano test), whereas 23 of 32 (1-day) and 25 of 32 (7-day) are significantly \emph{worse}, with error growing with model flexibility. Directional accuracy peaks at 51.1\% and is indistinguishable from a coin flip. In cost-aware backtests, 1 of 60 trading strategies edges past buy-and-hold on Sharpe ratio, and its deflated Sharpe ratio of 0.05 marks it as a likely artefact of multiple trials. Removing non-stationary price-level features improves most models but still leaves none better than the random walk. We release the frozen dataset, code and all out-of-sample predictions so the results can be reproduced exactly.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Bitcoin, cryptocurrency, time-series forecasting, machine learning, deep learning, market efficiency, walk-forward validation, data leakage, reproducibility, Diebold--Mariano test
+\end{IEEEkeywords}
+
+\section{Introduction}
+\label{sec:intro}
+Bitcoin is a popular target for machine learning: its data are free, it trades around the clock, and its large price swings appear to invite prediction. A substantial literature reports LSTM, gradient boosting and hybrid models forecasting its price with high accuracy. Such results are hard to compare and often hard to trust. Evaluating on price levels rewards a model for repeating yesterday's price; random train/test splits let a model learn from the future \cite{bergmeir2012, kapoor2023}; a single test window can coincide with one favourable market regime; and when dozens of architectures or hyperparameter settings are tried, the best one will look good by chance alone \cite{harvey2016, bailey2014}.
+
+This paper asks a simple question under conditions designed to make the answer credible: \emph{when evaluated without leakage, over many market regimes, against the right benchmark and with corrections for multiple testing, does any standard forecasting model beat a random walk in Bitcoin?} Our contributions are:
+\begin{enumerate}
+  \item \textbf{A broad, uniform benchmark.} We evaluate 32 models from six families, from ARIMA and ridge regression to XGBoost, LSTMs and Transformers, on identical features and identical walk-forward folds, at 1-day and 7-day horizons.
+  \item \textbf{A leakage-free protocol.} Features are lagged by construction and checked by unit tests; validation is expanding-window walk-forward with purging and embargo \cite{lopezdeprado2018}; only folds with at least two years of training history are scored.
+  \item \textbf{Inference that accounts for the search.} We test every model against the random walk with the Diebold--Mariano test, adjust all $p$-values for multiple comparisons, and deflate the best backtest's Sharpe ratio for the number of strategies tried.
+  \item \textbf{A clear negative result, released in full.} No model significantly beats the random walk; most are significantly worse, and error grows with model flexibility. The dataset snapshot, code and every out-of-sample prediction are public.
+\end{enumerate}
+
+Negative results are informative. They set a realistic baseline for future work, show how much apparent accuracy disappears under rigorous evaluation, and help practitioners avoid costly over-confidence.
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fig_price_folds.pdf}
+  \caption{BTC-USD daily close (log scale). The shaded region is used only for initial training (including a 200-day indicator warm-up); dotted lines mark the starts of the 13 scored walk-forward test folds.}
+  \label{fig:price}
+\end{figure*}
+
+\input{sections/related}
+\input{sections/method}
+
+\input{tables/main}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fig_r2_os.pdf}
+  \caption{Out-of-sample $R^2$ relative to the zero-return forecast. Bars left of zero are less accurate than predicting no change. For readability, models with $R^2_{OS} < -50\%$ are omitted: 14 models at 1 day and 19 at 7 days, including every deep-learning model except the Transformer (see Table~\ref{tab:main}).}
+  \label{fig:r2}
+\end{figure*}
+
+\input{sections/results}
+
+\begin{figure}[t]
+  \centering
+  \includegraphics[width=\columnwidth]{fig_dir_acc.pdf}
+  \caption{One-day directional accuracy of each model. The shaded band is the 95\% range expected from a fair coin over the same number of forecasts; every model except the RNN (47.0\%, below the band) lies inside it.}
+  \label{fig:da}
+\end{figure}
+
+\input{tables/backtest}
+
+\begin{figure*}[t]
+  \centering
+  \includegraphics[width=\textwidth]{fig_equity.pdf}
+  \caption{Growth of \$1, net of costs, for buy-and-hold and the three highest-Sharpe actively trading strategies (log scale). Flat segments are periods out of the market.}
+  \label{fig:equity}
+\end{figure*}
+
+\input{sections/robustness}
+\input{sections/discussion}
+
+\section{Conclusion}
+\label{sec:conclusion}
+Under a leakage-free, multi-regime, multiple-testing-aware evaluation, none of 32 standard forecasting models, including ten deep-learning architectures and three gradient-boosting libraries, predicts daily or weekly Bitcoin returns significantly better than a random walk. Most do significantly worse, the more flexible the model the larger the damage, and the single trading strategy that edges past buy-and-hold does not survive a correction for the number of strategies tried. We do not claim that Bitcoin is unpredictable with every possible model or data source. We do claim that price-and-volume features combined with off-the-shelf learners do not yield a reliable edge, and that a credible positive claim must clear the bar set here: beat the zero forecast out of sample, across regimes, with significance that survives correction for the search. Future work will add exogenous data (on-chain activity, macro-financial series and sentiment), intraday frequencies and nested hyperparameter tuning within the same protocol.
+
+\section*{Reproducibility}
+{\raggedright
+All code, the frozen data snapshot (\path{data/snapshots/}), every out-of-sample prediction (\path{reports/paper/oof_h*.csv}) and the scripts that generate each table and figure are available at \url{https://github.com/itsRou/bitcoin-price-prediction}. Running \path{scripts/run_real_benchmark.py} followed by \path{scripts/analyze_real_benchmark.py} and \path{scripts/make_paper_tables.py} regenerates every result, table and figure.\par}
+
+\bibliographystyle{IEEEtran}
+\bibliography{refs}
+
+\end{document}

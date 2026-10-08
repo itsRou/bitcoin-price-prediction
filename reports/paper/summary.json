@@ -1,0 +1,44 @@
+{
+  "h1": {
+    "n_models": 33,
+    "n_test_obs": 2567,
+    "test_start": "2019-09-20",
+    "test_end": "2026-09-29",
+    "n_folds": 13,
+    "best_rmse_model": "lag_one_linear",
+    "n_positive_r2": 2,
+    "n_dm_better_raw": 0,
+    "n_dm_better_holm": 0,
+    "n_dm_worse_holm": 23,
+    "n_dir_acc_above_50": 14,
+    "max_dir_acc": 0.5111024542267238,
+    "max_dir_acc_model": "random_forest",
+    "n_binom_raw": 0,
+    "n_binom_holm": 0,
+    "backtest": {
+      "buy_hold_sharpe": 0.8046678528875336,
+      "buy_hold_cagr": 0.34861500156897085,
+      "buy_hold_max_dd": -0.7663456370856903,
+      "n_strategies": 60,
+      "n_beat_bh_sharpe": 1,
+      "best_strategy": "gru (long_flat)",
+      "best_sharpe": 0.8219170586534154,
+      "best_deflated_sharpe_prob": 0.05290754751587322
+    }
+  },
+  "h7": {
+    "n_models": 33,
+    "n_test_obs": 2561,
+    "test_start": "2019-09-20",
+    "test_end": "2026-09-23",
+    "n_folds": 13,
+    "best_rmse_model": "buy_and_hold",
+    "n_positive_r2": 1,
+    "n_dm_better_raw": 0,
+    "n_dm_better_holm": 0,
+    "n_dm_worse_holm": 25,
+    "n_dir_acc_above_50": 9,
+    "max_dir_acc": 0.5435376805935181,
+    "max_dir_acc_model": "holt_winters"
+  }
+}

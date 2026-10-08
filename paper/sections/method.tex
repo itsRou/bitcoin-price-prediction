@@ -1,0 +1,51 @@
+\section{Data and Experimental Protocol}
+\label{sec:method}
+
+\subsection{Data}
+We use daily BTC-USD open, high, low, close and volume (OHLCV) candles from Yahoo Finance covering 1~January~2017 to 30~September~2026 (3{,}560 days). The series is frozen as a CSV snapshot that ships with the code, so every number in this paper can be regenerated exactly. Bitcoin trades every day, so no calendar gaps are filled. Over the sample the price ranges from roughly \$778 to \$124{,}753, spanning the 2017 bubble, the 2018 and 2022 bear markets, the March~2020 crash, the 2021 bull market and the post-2024 spot-ETF era (Fig.~\ref{fig:price}).
+
+\subsection{Prediction targets}
+For horizon $h \in \{1, 7\}$ days the target is the forward log return
+\begin{equation}
+  y_t^{(h)} = \ln P_{t+h} - \ln P_t ,
+\end{equation}
+where $P_t$ is the daily close. We predict returns rather than price levels because a model that simply repeats yesterday's price attains a deceptively low price-level error while carrying no information; on returns, that same model is the zero forecast $\hat y_t = 0$, which becomes our principal benchmark.
+
+\subsection{Features}
+All models receive the same 66 features computed from OHLCV alone: 14 lagged log returns; rolling mean, standard deviation, skewness and kurtosis of returns over 7, 14, 30 and 90 days; realized, Parkinson and Garman--Klass volatility; rate of change and a 30-day price $z$-score; standard technical indicators (RSI, MACD, Bollinger bandwidth and \%B, ATR, ADX, CCI, Williams \%R, stochastic oscillator, on-balance volume, VWAP distance, 9/21/50/200-day EMAs and SMAs and their crossovers); and regime descriptors (drawdown from all-time high, a 200-day moving-average bull/bear flag, days since the last halving, a rolling Hurst exponent and an expanding-window volatility tercile).
+
+\textbf{Leakage guard.} Every feature is first computed from data available up to and including day $t$, and the \emph{entire} feature block is then shifted forward by one day, so the row used to forecast $y_t^{(h)}$ contains only information known at the close of day $t-1$. Automated unit tests in the repository verify both the shift and that perturbing future prices leaves every past feature row unchanged.
+
+\subsection{Models}
+We evaluate the zero forecast plus 32 regression models, grouped below, all through one shared \texttt{fit}/\texttt{predict} interface:
+\begin{itemize}
+  \item \textbf{Baselines (3):} zero return (random walk), training-set mean return, and a constant small positive return (``always long'').
+  \item \textbf{Statistical (3):} auto-ARIMA \cite{hyndman2008}, Holt--Winters exponential smoothing and Prophet \cite{taylor2018}, each fitted on the return series alone.
+  \item \textbf{Linear (7):} lag-1 OLS, OLS on all features, ridge, lasso, elastic net, Bayesian ridge and Huber regression.
+  \item \textbf{Kernel and instance-based (2):} support vector regression and $k$-nearest neighbours.
+  \item \textbf{Tree ensembles and boosting (8):} decision tree, random forest, extra trees, AdaBoost, scikit-learn gradient boosting \cite{pedregosa2011}, XGBoost \cite{chen2016}, LightGBM \cite{ke2017} and CatBoost \cite{prokhorenkova2018}.
+  \item \textbf{Deep learning (10):} MLP, vanilla RNN, LSTM \cite{hochreiter1997}, GRU, bidirectional LSTM, 1-D CNN, CNN--LSTM, LSTM with attention, a Transformer encoder \cite{vaswani2017} and a temporal convolutional network \cite{bai2018}. Each reads a 30-day window of the feature vector.
+\end{itemize}
+Classical and boosting models use library defaults; features are standardized inside each training fold. Deep models are trained with Adam (learning rate $10^{-3}$), mean-squared-error loss, batch size 64, gradient clipping at 1.0, up to 50 epochs with early stopping (patience 5) on the chronologically last 15\% of each training fold. We deliberately do not tune hyperparameters on the test periods: with 32 models, per-model tuning against the same history is itself a source of selection bias \cite{bailey2014}.
+
+\subsection{Purged walk-forward validation}
+Random $k$-fold cross-validation is invalid for this problem because it trains on the future \cite{bergmeir2012}. We instead use expanding-window walk-forward validation. The 3{,}359 usable rows at $h=1$ (3{,}353 at $h=7$, after indicator warm-up) are split into 17 contiguous blocks; fold $i$ tests on block $i$ and trains on everything before it. Two safeguards from \cite{lopezdeprado2018} remove leakage through overlapping targets: the $h$ rows immediately before each test block are \emph{purged} from training, because their targets extend into the test period, and the $h$ rows after each earlier test block are \emph{embargoed}. We only score folds with at least two years (730 rows) of training history. This leaves 13 test folds of about 198 days each, from September~2019 to September~2026, for a total of 2{,}567 one-day and 2{,}561 seven-day out-of-sample forecasts per model. Every model sees the same folds.
+
+Sequence models need 30 days of input history even for the first day of a test block. Rather than padding, we pass the real preceding 29 feature rows as context. Their features are known before the test block begins, so this adds no information about the targets.
+
+Statistical models (ARIMA, Holt--Winters, Prophet) are refitted once per fold and forecast the whole $\sim$198-day block from the end of training, whereas feature-based models update their inputs daily. This favours feature-based models, so it cannot explain any failure of theirs to beat the baselines.
+
+\subsection{Evaluation}
+\textbf{Forecast accuracy.} We report RMSE, MAE and the out-of-sample $R^2$ of Campbell and Thompson \cite{campbell2008} relative to the zero forecast,
+\begin{equation}
+  R^2_{OS} = 1 - \frac{\sum_t (y_t - \hat y_t)^2}{\sum_t y_t^2},
+\end{equation}
+which is positive only if a model beats the random walk in mean squared error.
+
+\textbf{Equal predictive accuracy.} For each model we test equal mean squared error against the zero forecast with the Diebold--Mariano (DM) test \cite{diebold1995}, using a Newey--West variance with $h-1$ lags to account for the serial correlation that overlapping 7-day targets induce.
+
+\textbf{Directional accuracy.} We report the share of days on which the predicted sign matches the realized sign. For $h=1$ (non-overlapping targets) we test it against a coin flip with a one-sided binomial test.
+
+\textbf{Multiple testing.} Because 32 models are compared against the same benchmark, we adjust all $p$-values with the Holm--Bonferroni procedure \cite{holm1979} and treat only adjusted $p<0.05$ as evidence \cite{harvey2016}.
+
+\textbf{Economic value.} For $h=1$ we convert each model's forecast into a daily position, either long/short ($\mathrm{sign}(\hat y_t)$) or long/flat ($\max(0, \mathrm{sign}(\hat y_t))$), and backtest it with a 0.10\% fee plus 0.05\% slippage charged on every unit of position change. We compare annualized Sharpe ratios (365 periods per year), compound annual growth and maximum drawdown with buy-and-hold, and we correct the best strategy's Sharpe ratio for the number of strategies tried using the deflated Sharpe ratio (DSR) of Bailey and L\'opez de Prado \cite{bailey2014}.
