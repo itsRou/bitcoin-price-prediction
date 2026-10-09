@@ -52,8 +52,9 @@ DEEP_CONFIG = TrainingConfig(max_epochs=50, patience=5, batch_size=64, val_fract
 def load_snapshot() -> pd.DataFrame:
     if not SNAPSHOT_PATH.exists():
         end_exclusive = (pd.Timestamp(END_DATE) + pd.Timedelta(days=1)).strftime("%Y-%m-%d")
-        raw = yf.download(TICKER, start=START_DATE, end=end_exclusive, progress=False,
-                          auto_adjust=True)
+        raw = yf.download(
+            TICKER, start=START_DATE, end=end_exclusive, progress=False, auto_adjust=True
+        )
         if isinstance(raw.columns, pd.MultiIndex):
             raw.columns = raw.columns.get_level_values(0)
         raw = raw.rename(columns=str.lower)[["open", "high", "low", "close", "volume"]]
@@ -81,15 +82,20 @@ def run_horizon(ohlcv: pd.DataFrame, h: int, only: set[str] | None) -> None:
     # exactly the same rows and folds as the main run.
     matrix = matrix.dropna(subset=[*feature_cols, target])
     if STATIONARY:
-        feature_cols = [c for c in feature_cols if not c.startswith(LEVEL_FEATURES)
-                        or c.startswith(("ema_cross", "sma_cross"))]
+        feature_cols = [
+            c
+            for c in feature_cols
+            if not c.startswith(LEVEL_FEATURES) or c.startswith(("ema_cross", "sma_cross"))
+        ]
     X, y = matrix[feature_cols], matrix[target]
 
     splitter = PurgedWalkForwardSplit(n_splits=N_SPLITS, purge=h, embargo=h)
     folds = [(tr, te) for tr, te in splitter.split(X) if len(tr) >= MIN_TRAIN_ROWS]
-    print(f"h={h}: {len(X)} rows, {len(feature_cols)} features, {len(folds)} scored folds, "
-          f"test span {X.index[folds[0][1][0]].date()} -> {X.index[folds[-1][1][-1]].date()}",
-          flush=True)
+    print(
+        f"h={h}: {len(X)} rows, {len(feature_cols)} features, {len(folds)} scored folds, "
+        f"test span {X.index[folds[0][1][0]].date()} -> {X.index[folds[-1][1][-1]].date()}",
+        flush=True,
+    )
 
     out_path = OUT_DIR / f"oof_h{h}.csv"
     if out_path.exists():
@@ -104,8 +110,9 @@ def run_horizon(ohlcv: pd.DataFrame, h: int, only: set[str] | None) -> None:
         oof.iloc[te, oof.columns.get_loc("fold")] = i
 
     timings_path = OUT_DIR / f"timings_h{h}.csv"
-    timings = pd.read_csv(timings_path, index_col=0)["seconds"].to_dict() \
-        if timings_path.exists() else {}
+    timings = (
+        pd.read_csv(timings_path, index_col=0)["seconds"].to_dict() if timings_path.exists() else {}
+    )
 
     for name, factory in get_regression_registry().items():
         if name in SKIPPED_MODELS or (only and name not in only):
@@ -120,8 +127,8 @@ def run_horizon(ohlcv: pd.DataFrame, h: int, only: set[str] | None) -> None:
                 model.fit(X.iloc[tr], y.iloc[tr])
                 if name in DEEP_ARCHITECTURES:
                     ctx_start = te[0] - (model.window - 1)
-                    p = np.asarray(model.predict(X.iloc[ctx_start: te[-1] + 1]))
-                    preds[te] = p[-len(te):]
+                    p = np.asarray(model.predict(X.iloc[ctx_start : te[-1] + 1]))
+                    preds[te] = p[-len(te) :]
                 else:
                     preds[te] = np.asarray(model.predict(X.iloc[te]))
             except Exception as exc:  # noqa: BLE001
@@ -138,8 +145,11 @@ def main() -> None:
     horizons = [int(a) for a in sys.argv[1:2]] or [1, 7]
     only = set(sys.argv[2].split(",")) if len(sys.argv) > 2 else None
     ohlcv = load_snapshot()
-    print(f"snapshot: {len(ohlcv)} daily candles {ohlcv.index[0].date()} -> "
-          f"{ohlcv.index[-1].date()}", flush=True)
+    print(
+        f"snapshot: {len(ohlcv)} daily candles {ohlcv.index[0].date()} -> "
+        f"{ohlcv.index[-1].date()}",
+        flush=True,
+    )
     for h in horizons:
         run_horizon(ohlcv, h, only)
 

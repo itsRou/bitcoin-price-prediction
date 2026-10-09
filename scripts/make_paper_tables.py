@@ -11,20 +11,49 @@ PAPER = Path("reports/paper")
 OUT = Path("paper/tables")
 
 NAMES = {
-    "naive_zero": "Zero return (random walk)", "mean_return": "Mean return",
-    "buy_and_hold": "Always long", "lag_one_linear": "Lag-1 OLS", "auto_arima": "Auto-ARIMA",
-    "holt_winters": "Holt--Winters", "prophet": "Prophet", "linear": "OLS (all features)",
-    "ridge": "Ridge", "lasso": "Lasso", "elastic_net": "Elastic net",
-    "bayesian_ridge": "Bayesian ridge", "huber": "Huber", "knn": "$k$-NN", "svr": "SVR",
-    "decision_tree": "Decision tree", "random_forest": "Random forest",
-    "extra_trees": "Extra trees", "adaboost": "AdaBoost", "gradient_boosting": "Gradient boosting",
-    "xgboost": "XGBoost", "lightgbm": "LightGBM", "catboost": "CatBoost", "mlp": "MLP",
-    "rnn": "RNN", "lstm": "LSTM", "gru": "GRU", "bilstm": "BiLSTM", "cnn1d": "1-D CNN",
-    "cnn_lstm": "CNN--LSTM", "lstm_attention": "LSTM + attention", "transformer": "Transformer",
+    "naive_zero": "Zero return (random walk)",
+    "mean_return": "Mean return",
+    "buy_and_hold": "Always long",
+    "lag_one_linear": "Lag-1 OLS",
+    "auto_arima": "Auto-ARIMA",
+    "holt_winters": "Holt--Winters",
+    "prophet": "Prophet",
+    "linear": "OLS (all features)",
+    "ridge": "Ridge",
+    "lasso": "Lasso",
+    "elastic_net": "Elastic net",
+    "bayesian_ridge": "Bayesian ridge",
+    "huber": "Huber",
+    "knn": "$k$-NN",
+    "svr": "SVR",
+    "decision_tree": "Decision tree",
+    "random_forest": "Random forest",
+    "extra_trees": "Extra trees",
+    "adaboost": "AdaBoost",
+    "gradient_boosting": "Gradient boosting",
+    "xgboost": "XGBoost",
+    "lightgbm": "LightGBM",
+    "catboost": "CatBoost",
+    "mlp": "MLP",
+    "rnn": "RNN",
+    "lstm": "LSTM",
+    "gru": "GRU",
+    "bilstm": "BiLSTM",
+    "cnn1d": "1-D CNN",
+    "cnn_lstm": "CNN--LSTM",
+    "lstm_attention": "LSTM + attention",
+    "transformer": "Transformer",
     "tcn": "TCN",
 }
-FAMILY_ORDER = ["Baseline", "Statistical", "Linear", "Kernel / instance", "Tree ensemble",
-                "Gradient boosting", "Deep learning"]
+FAMILY_ORDER = [
+    "Baseline",
+    "Statistical",
+    "Linear",
+    "Kernel / instance",
+    "Tree ensemble",
+    "Gradient boosting",
+    "Deep learning",
+]
 
 
 def fmt_r2(v: float) -> str:
@@ -72,8 +101,10 @@ def main_table() -> None:
             dma = "--" if np.isnan(a.dm_stat) else f"{a.dm_stat:.2f}"
             dmb = "--" if np.isnan(b.dm_stat) else f"{b.dm_stat:.2f}"
             label = fam.replace(" / instance", "") if i == 0 else ""
-            lines.append(f"{label} & {NAMES[m]} & {r2a} & {da} & {dma} & {fmt_p(a.dm_p_holm)} & "
-                         f"{r2b} & {dmb} & {fmt_p(b.dm_p_holm)} \\\\")
+            lines.append(
+                f"{label} & {NAMES[m]} & {r2a} & {da} & {dma} & {fmt_p(a.dm_p_holm)} & "
+                f"{r2b} & {dmb} & {fmt_p(b.dm_p_holm)} \\\\"
+            )
         lines.append(r"\addlinespace[2pt]")
     lines[-1] = r"\bottomrule"
     lines += [r"\end{tabular}", r"\end{table*}"]
@@ -89,8 +120,10 @@ def backtest_table() -> None:
     lf = bt[bt["strategy"] == "long_flat"]
 
     def row(name: str, r: pd.Series) -> str:
-        return (f"{name} & {r.sharpe:.2f} & {r.cagr * 100:.1f} & {r.max_dd * 100:.1f} & "
-                f"{r.turnover:.2f} \\\\")
+        return (
+            f"{name} & {r.sharpe:.2f} & {r.cagr * 100:.1f} & {r.max_dd * 100:.1f} & "
+            f"{r.turnover:.2f} \\\\"
+        )
 
     def label(idx: str) -> str:
         model, strat = idx.rsplit(" (", 1)

@@ -39,8 +39,10 @@ def main() -> None:
     rows = []
     for m in [m for m in t_full.sort_values("r2_os", ascending=False).index if m != "naive_zero"]:
         a, b = t_full.loc[m], t_stat.loc[m]
-        rows.append(f"{NAMES[m]} & {fmt_r2(a.r2_os)} & {fmt_p(a.dm_p_holm)} & "
-                    f"{fmt_r2(b.r2_os)} & {fmt_p(b.dm_p_holm)} & {b.dir_acc * 100:.1f} \\\\")
+        rows.append(
+            f"{NAMES[m]} & {fmt_r2(a.r2_os)} & {fmt_p(a.dm_p_holm)} & "
+            f"{fmt_r2(b.r2_os)} & {fmt_p(b.dm_p_holm)} & {b.dir_acc * 100:.1f} \\\\"
+        )
     lines = [
         r"\begin{table}[t]",
         r"\centering",
@@ -72,7 +74,8 @@ def main() -> None:
         "n_better_holm": int(((ts["dm_stat"] < 0) & (ts["dm_p_holm"] < 0.05)).sum()),
         "n_worse_holm": int(((ts["dm_stat"] > 0) & (ts["dm_p_holm"] < 0.05)).sum()),
         "n_worse_holm_full_same_subset": int(
-            ((tf["dm_stat"] > 0) & (tf["dm_p_holm"] < 0.05)).sum()),
+            ((tf["dm_stat"] > 0) & (tf["dm_p_holm"] < 0.05)).sum()
+        ),
         "median_r2_full": float(tf["r2_os"].median()),
         "median_r2_stationary": float(ts["r2_os"].median()),
         "n_improved": int((ts["r2_os"] > tf["r2_os"].reindex(ts.index)).sum()),

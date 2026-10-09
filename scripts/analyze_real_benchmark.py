@@ -41,34 +41,74 @@ FEE, SLIPPAGE = 0.001, 0.0005
 BASELINES = {"naive_zero", "mean_return", "buy_and_hold"}
 
 FAMILY = {
-    "naive_zero": "Baseline", "mean_return": "Baseline", "buy_and_hold": "Baseline",
-    "lag_one_linear": "Linear", "auto_arima": "Statistical", "holt_winters": "Statistical",
-    "prophet": "Statistical", "linear": "Linear", "ridge": "Linear", "lasso": "Linear",
-    "elastic_net": "Linear", "bayesian_ridge": "Linear", "huber": "Linear",
-    "knn": "Kernel / instance", "svr": "Kernel / instance", "decision_tree": "Tree ensemble",
-    "random_forest": "Tree ensemble", "extra_trees": "Tree ensemble",
-    "gradient_boosting": "Gradient boosting", "adaboost": "Tree ensemble",
-    "xgboost": "Gradient boosting", "lightgbm": "Gradient boosting",
+    "naive_zero": "Baseline",
+    "mean_return": "Baseline",
+    "buy_and_hold": "Baseline",
+    "lag_one_linear": "Linear",
+    "auto_arima": "Statistical",
+    "holt_winters": "Statistical",
+    "prophet": "Statistical",
+    "linear": "Linear",
+    "ridge": "Linear",
+    "lasso": "Linear",
+    "elastic_net": "Linear",
+    "bayesian_ridge": "Linear",
+    "huber": "Linear",
+    "knn": "Kernel / instance",
+    "svr": "Kernel / instance",
+    "decision_tree": "Tree ensemble",
+    "random_forest": "Tree ensemble",
+    "extra_trees": "Tree ensemble",
+    "gradient_boosting": "Gradient boosting",
+    "adaboost": "Tree ensemble",
+    "xgboost": "Gradient boosting",
+    "lightgbm": "Gradient boosting",
     "catboost": "Gradient boosting",
 }
-for _d in ("mlp", "rnn", "lstm", "gru", "bilstm", "cnn1d", "cnn_lstm", "lstm_attention",
-           "transformer", "tcn"):
+for _d in (
+    "mlp",
+    "rnn",
+    "lstm",
+    "gru",
+    "bilstm",
+    "cnn1d",
+    "cnn_lstm",
+    "lstm_attention",
+    "transformer",
+    "tcn",
+):
     FAMILY[_d] = "Deep learning"
 
 # Categorical slots in fixed order (reference palette, light mode); baselines in neutral ink.
 FAMILY_COLOR = {
-    "Baseline": "#8a8985", "Statistical": "#2a78d6", "Linear": "#eb6834",
-    "Kernel / instance": "#1baf7a", "Tree ensemble": "#eda100",
-    "Gradient boosting": "#e87ba4", "Deep learning": "#4a3aa7",
+    "Baseline": "#8a8985",
+    "Statistical": "#2a78d6",
+    "Linear": "#eb6834",
+    "Kernel / instance": "#1baf7a",
+    "Tree ensemble": "#eda100",
+    "Gradient boosting": "#e87ba4",
+    "Deep learning": "#4a3aa7",
 }
 INK, INK2, GRID = "#0b0b0b", "#52514e", "#e4e3df"
 
-plt.rcParams.update({
-    "font.family": "serif", "font.size": 8, "axes.edgecolor": INK2, "axes.labelcolor": INK,
-    "xtick.color": INK2, "ytick.color": INK2, "axes.spines.top": False,
-    "axes.spines.right": False, "axes.grid": True, "grid.color": GRID, "grid.linewidth": 0.5,
-    "axes.axisbelow": True, "legend.frameon": False, "figure.dpi": 200,
-})
+plt.rcParams.update(
+    {
+        "font.family": "serif",
+        "font.size": 8,
+        "axes.edgecolor": INK2,
+        "axes.labelcolor": INK,
+        "xtick.color": INK2,
+        "ytick.color": INK2,
+        "axes.spines.top": False,
+        "axes.spines.right": False,
+        "axes.grid": True,
+        "grid.color": GRID,
+        "grid.linewidth": 0.5,
+        "axes.axisbelow": True,
+        "legend.frameon": False,
+        "figure.dpi": 200,
+    }
+)
 
 
 def holm(pvals: pd.Series) -> pd.Series:
@@ -84,8 +124,10 @@ def deflated_sharpe(sr_best: float, sr_all: np.ndarray, returns: pd.Series) -> f
     n_trials = len(sr_all)
     var_sr = np.var(sr_all, ddof=1)
     gamma = 0.5772156649
-    sr0 = np.sqrt(var_sr) * ((1 - gamma) * stats.norm.ppf(1 - 1 / n_trials)
-                             + gamma * stats.norm.ppf(1 - 1 / (n_trials * np.e)))
+    sr0 = np.sqrt(var_sr) * (
+        (1 - gamma) * stats.norm.ppf(1 - 1 / n_trials)
+        + gamma * stats.norm.ppf(1 - 1 / (n_trials * np.e))
+    )
     t = len(returns)
     skew, kurt = stats.skew(returns), stats.kurtosis(returns, fisher=False)
     denom = np.sqrt(1 - skew * sr_best + (kurt - 1) / 4 * sr_best**2)
@@ -111,16 +153,25 @@ def forecast_table(oof: pd.DataFrame, h: int) -> pd.DataFrame:
         n_dir = int(nz.sum())
         da = hits / n_dir if n_dir else np.nan
         # Binomial test is only valid for non-overlapping (h=1) targets.
-        binom_p = (stats.binomtest(hits, n_dir, 0.5, alternative="greater").pvalue
-                   if (h == 1 and n_dir) else np.nan)
-        dm, dm_p = (np.nan, np.nan) if m == "naive_zero" else \
-            diebold_mariano_test(err, e_zero[ok], h=h, power=2)
+        binom_p = (
+            stats.binomtest(hits, n_dir, 0.5, alternative="greater").pvalue
+            if (h == 1 and n_dir)
+            else np.nan
+        )
+        dm, dm_p = (
+            (np.nan, np.nan)
+            if m == "naive_zero"
+            else diebold_mariano_test(err, e_zero[ok], h=h, power=2)
+        )
         rows[m] = {
             "family": FAMILY.get(m, "Other"),
             "rmse": float(np.sqrt(np.mean(err**2))),
             "mae": float(np.mean(np.abs(err))),
-            "r2_os": float(1 - np.sum(err**2) / np.sum(yy**2)) if ok.all() else
-            float(1 - np.sum(err**2) / np.sum(e_zero[ok] ** 2)),
+            "r2_os": (
+                float(1 - np.sum(err**2) / np.sum(yy**2))
+                if ok.all()
+                else float(1 - np.sum(err**2) / np.sum(e_zero[ok] ** 2))
+            ),
             "dir_acc": da,
             "n_dir": n_dir,
             "binom_p": binom_p,
@@ -145,8 +196,11 @@ def backtests(oof: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, pd.Series]]:
     bh = run_backtest(simple, pd.Series(1.0, index=simple.index), FEE, SLIPPAGE)["net_return"]
     curves["Buy & hold"] = bh
     rows["Buy & hold (benchmark)"] = {
-        "strategy": "long", "sharpe": sharpe_ratio(bh), "cagr": cagr(bh),
-        "max_dd": max_drawdown(bh), "turnover": 0.0,
+        "strategy": "long",
+        "sharpe": sharpe_ratio(bh),
+        "cagr": cagr(bh),
+        "max_dd": max_drawdown(bh),
+        "turnover": 0.0,
     }
     for m in models:
         if m in ("naive_zero", "buy_and_hold", "mean_return"):
@@ -159,8 +213,11 @@ def backtests(oof: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, pd.Series]]:
             bt = run_backtest(simple, pos, FEE, SLIPPAGE)
             r = bt["net_return"]
             rows[f"{m} ({label})"] = {
-                "strategy": label, "sharpe": sharpe_ratio(r), "cagr": cagr(r),
-                "max_dd": max_drawdown(r), "turnover": float(pos.diff().abs().mean()),
+                "strategy": label,
+                "sharpe": sharpe_ratio(r),
+                "cagr": cagr(r),
+                "max_dd": max_drawdown(r),
+                "turnover": float(pos.diff().abs().mean()),
             }
             curves[f"{m} ({label})"] = r
     tab = pd.DataFrame(rows).T
@@ -182,8 +239,14 @@ def fig_r2(tabs: dict[int, pd.DataFrame]) -> None:
         ax.tick_params(axis="y", labelsize=6.5)
         ax.grid(axis="y", visible=False)
     handles = [plt.Rectangle((0, 0), 1, 1, color=c) for c in FAMILY_COLOR.values()]
-    fig.legend(handles, FAMILY_COLOR.keys(), loc="lower center", ncol=4, fontsize=7,
-               bbox_to_anchor=(0.5, -0.02))
+    fig.legend(
+        handles,
+        FAMILY_COLOR.keys(),
+        loc="lower center",
+        ncol=4,
+        fontsize=7,
+        bbox_to_anchor=(0.5, -0.02),
+    )
     fig.tight_layout(rect=(0, 0.07, 1, 1))
     for ext in ("pdf", "png"):
         fig.savefig(PAPER / f"fig_r2_os.{ext}", bbox_inches="tight")
@@ -194,10 +257,21 @@ def fig_da(tab: pd.DataFrame, n_obs: int) -> None:
     t = tab.drop(index=[m for m in ("naive_zero",) if m in tab.index]).sort_values("dir_acc")
     fig, ax = plt.subplots(figsize=(3.4, 4.4))
     ci = 1.96 * np.sqrt(0.25 / t["n_dir"])
-    ax.axvspan(50 - ci.mean() * 100, 50 + ci.mean() * 100, color=GRID, alpha=0.8, lw=0,
-               label="95% band under a coin flip")
-    ax.scatter(t["dir_acc"] * 100, [NAMES[m] for m in t.index], s=14, zorder=3,
-               c=[FAMILY_COLOR[f] for f in t["family"]])
+    ax.axvspan(
+        50 - ci.mean() * 100,
+        50 + ci.mean() * 100,
+        color=GRID,
+        alpha=0.8,
+        lw=0,
+        label="95% band under a coin flip",
+    )
+    ax.scatter(
+        t["dir_acc"] * 100,
+        [NAMES[m] for m in t.index],
+        s=14,
+        zorder=3,
+        c=[FAMILY_COLOR[f] for f in t["family"]],
+    )
     ax.axvline(50, color=INK, linewidth=0.8)
     ax.set_xlabel("Directional accuracy, 1-day horizon (%)")
     ax.tick_params(axis="y", labelsize=6.5)
@@ -240,8 +314,13 @@ def fig_price(oof: pd.DataFrame, close: pd.Series) -> None:
     scored = oof[oof["fold"].notna()]
     first = scored.index[0]
     ax.axvspan(close.index[0], first, color=GRID, alpha=0.7, lw=0)
-    ax.text(close.index[0] + pd.Timedelta(days=60), close.max() * 0.6,
-            "initial training\nonly", fontsize=7, color=INK2)
+    ax.text(
+        close.index[0] + pd.Timedelta(days=60),
+        close.max() * 0.6,
+        "initial training\nonly",
+        fontsize=7,
+        color=INK2,
+    )
     for _, g in scored.groupby("fold"):
         ax.axvline(g.index[0], color=INK2, linewidth=0.4, linestyle=":")
     fig.tight_layout()
@@ -293,16 +372,20 @@ def main() -> None:
                 "buy_hold_max_dd": float(bt.loc["Buy & hold (benchmark)", "max_dd"]),
                 "n_strategies": int(len(strat)),
                 "n_beat_bh_sharpe": int(
-                    (strat["sharpe"] > bt.loc["Buy & hold (benchmark)", "sharpe"]).sum()),
+                    (strat["sharpe"] > bt.loc["Buy & hold (benchmark)", "sharpe"]).sum()
+                ),
                 "best_strategy": best,
                 "best_sharpe": float(strat.iloc[0]["sharpe"]),
                 "best_deflated_sharpe_prob": deflated_sharpe(
-                    r_best.mean() / r_best.std(), sr_pp, r_best),
+                    r_best.mean() / r_best.std(), sr_pp, r_best
+                ),
             }
             fold_models = [m for m in tab.index if m != "naive_zero"]
             fold_da = scored.groupby("fold").apply(
                 lambda g, ms=fold_models: pd.Series(
-                    {m: np.mean(np.sign(g[m]) == np.sign(g["y_true"])) for m in ms}))
+                    {m: np.mean(np.sign(g[m]) == np.sign(g["y_true"])) for m in ms}
+                )
+            )
             fold_da.to_csv(PAPER / "fold_da_h1.csv")
             fig_da(tab, len(scored))
             fig_equity(bt, curves)
