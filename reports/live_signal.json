@@ -1,76 +1,76 @@
 {
-  "generated_at": "2026-10-21T04:45:04.346293+00:00",
-  "as_of_date": "2026-10-19",
-  "current_price": 81853.5390625,
-  "predicted_log_return": -0.008300538896383068,
-  "predicted_next_price": 81176.92260316669,
-  "dead_zone_threshold": 0.004219354460813573,
+  "generated_at": "2026-10-22T04:42:42.577581+00:00",
+  "as_of_date": "2026-10-20",
+  "current_price": 82941.0,
+  "predicted_log_return": -0.011726734397743976,
+  "predicted_next_price": 81974.05356520812,
+  "dead_zone_threshold": 0.004259726690733322,
   "signal": "SELL",
   "model": "ridge",
   "model_description": "Linear regression with L2 regularization over the full engineered feature set.",
   "selection_reason": "Lowest mean absolute error among the 8 curated models over the preceding 20 out-of-fold predictions on real BTC/USDT data.",
   "recent_stats": {
-    "rmse": 0.07027766863143524,
-    "mae": 0.04512674049900994,
-    "r2": -7.805425067952786,
-    "directional_accuracy": 0.5,
+    "rmse": 0.06051846548847731,
+    "mae": 0.03833610445918705,
+    "r2": -5.52857260324057,
+    "directional_accuracy": 0.4939759036144578,
     "n_predictions": 830
   },
   "leaderboard": {
     "buy_and_hold": {
-      "rmse": 0.023685579530106617,
-      "mae": 0.016624926556084746,
-      "r2": -0.00019266331907386025,
+      "rmse": 0.02368763576158658,
+      "mae": 0.016629232563097108,
+      "r2": -0.00019771037885485399,
       "directional_accuracy": 0.5,
       "n_predictions": 830
     },
     "naive_zero": {
-      "rmse": 0.02368717847348248,
-      "mae": 0.016624748894602394,
-      "r2": -0.0003277079703507546,
+      "rmse": 0.02368925274322945,
+      "mae": 0.016629054901614756,
+      "r2": -0.0003342674041204585,
       "directional_accuracy": 0.0,
       "n_predictions": 830
     },
     "auto_arima": {
-      "rmse": 0.023694520480222712,
-      "mae": 0.01664535086429253,
-      "r2": -0.0009479212227356815,
-      "directional_accuracy": 0.1710843373493976,
+      "rmse": 0.023786357249731147,
+      "mae": 0.016735435163485253,
+      "r2": -0.008552006753782315,
+      "directional_accuracy": 0.344578313253012,
       "n_predictions": 830
     },
     "ridge": {
-      "rmse": 0.07027766863143524,
-      "mae": 0.04512674049900994,
-      "r2": -7.805425067952786,
-      "directional_accuracy": 0.5,
-      "n_predictions": 830
-    },
-    "random_forest": {
-      "rmse": 0.02561503467058529,
-      "mae": 0.018860990756910667,
-      "r2": -0.1697836041390055,
-      "directional_accuracy": 0.4891566265060241,
-      "n_predictions": 830
-    },
-    "xgboost": {
-      "rmse": 0.024416100422168355,
-      "mae": 0.017541027774950313,
-      "r2": -0.06284085200849243,
-      "directional_accuracy": 0.5228915662650603,
-      "n_predictions": 830
-    },
-    "lstm": {
-      "rmse": 0.16498753789132764,
-      "mae": 0.11070836076529521,
-      "r2": -47.53085214376374,
+      "rmse": 0.06051846548847731,
+      "mae": 0.03833610445918705,
+      "r2": -5.52857260324057,
       "directional_accuracy": 0.4939759036144578,
       "n_predictions": 830
     },
+    "random_forest": {
+      "rmse": 0.02599347220342931,
+      "mae": 0.019204320609218718,
+      "r2": -0.2044007462923736,
+      "directional_accuracy": 0.4831325301204819,
+      "n_predictions": 830
+    },
+    "xgboost": {
+      "rmse": 0.025938289480841883,
+      "mae": 0.018641645445951024,
+      "r2": -0.19929242032276417,
+      "directional_accuracy": 0.5132530120481927,
+      "n_predictions": 830
+    },
+    "lstm": {
+      "rmse": 0.16629255439937257,
+      "mae": 0.11197290205465672,
+      "r2": -48.29331574807004,
+      "directional_accuracy": 0.4975903614457831,
+      "n_predictions": 830
+    },
     "transformer": {
-      "rmse": 0.06415296128879312,
-      "mae": 0.040050182892285506,
-      "r2": -6.337515811385499,
-      "directional_accuracy": 0.5108433734939759,
+      "rmse": 0.04331395661292901,
+      "mae": 0.030282637501790333,
+      "r2": -2.3442453938544894,
+      "directional_accuracy": 0.4855421686746988,
       "n_predictions": 830
     }
   },
