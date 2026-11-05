@@ -1,75 +1,75 @@
 {
-  "generated_at": "2026-11-04T06:15:16.993661+00:00",
-  "as_of_date": "2026-11-02",
-  "current_price": 76677.296875,
+  "generated_at": "2026-11-05T06:42:19.457198+00:00",
+  "as_of_date": "2026-11-03",
+  "current_price": 77345.046875,
   "predicted_log_return": 0.0,
-  "predicted_next_price": 76677.296875,
-  "dead_zone_threshold": 0.003869994070895422,
+  "predicted_next_price": 77345.046875,
+  "dead_zone_threshold": 0.0037548910068254614,
   "signal": "HOLD",
   "model": "naive_zero",
   "model_description": "Always predicts zero return -- the efficient-market / random-walk baseline.",
   "selection_reason": "Lowest mean absolute error among the 8 curated models over the preceding 20 out-of-fold predictions on real BTC/USDT data.",
   "recent_stats": {
-    "rmse": 0.02357498351545162,
-    "mae": 0.016528752921263035,
-    "r2": -6.140916914554317e-05,
+    "rmse": 0.023550824163662623,
+    "mae": 0.016500717839349022,
+    "r2": -4.4274889846374066e-05,
     "directional_accuracy": 0.0,
     "n_predictions": 830
   },
   "leaderboard": {
     "buy_and_hold": {
-      "rmse": 0.02357441198178295,
-      "mae": 0.016529653474311654,
-      "r2": -1.2920326100118729e-05,
+      "rmse": 0.02355037108703712,
+      "mae": 0.01650161839239764,
+      "r2": -5.797057913481396e-06,
       "directional_accuracy": 0.4963855421686747,
       "n_predictions": 830
     },
     "naive_zero": {
-      "rmse": 0.02357498351545162,
-      "mae": 0.016528752921263035,
-      "r2": -6.140916914554317e-05,
+      "rmse": 0.023550824163662623,
+      "mae": 0.016500717839349022,
+      "r2": -4.4274889846374066e-05,
       "directional_accuracy": 0.0,
       "n_predictions": 830
     },
     "auto_arima": {
-      "rmse": 0.023589848198455242,
-      "mae": 0.016558070575760662,
-      "r2": -0.0013229398427589967,
-      "directional_accuracy": 0.0855421686746988,
+      "rmse": 0.0235581224228944,
+      "mae": 0.01650763896982844,
+      "r2": -0.000664186380343601,
+      "directional_accuracy": 0.0891566265060241,
       "n_predictions": 830
     },
     "ridge": {
-      "rmse": 0.08406548830963986,
-      "mae": 0.039594536535388775,
-      "r2": -11.716258663008395,
-      "directional_accuracy": 0.4891566265060241,
-      "n_predictions": 830
-    },
-    "random_forest": {
-      "rmse": 0.02613740887166151,
-      "mae": 0.019279847061164024,
-      "r2": -0.22927468102337611,
-      "directional_accuracy": 0.4927710843373494,
-      "n_predictions": 830
-    },
-    "xgboost": {
-      "rmse": 0.025075102056929616,
-      "mae": 0.017609694070046433,
-      "r2": -0.13138207040352,
-      "directional_accuracy": 0.5036144578313253,
-      "n_predictions": 830
-    },
-    "lstm": {
-      "rmse": 0.1428755590040904,
-      "mae": 0.095191140980971,
-      "r2": -35.731592580637944,
+      "rmse": 0.08590054010253714,
+      "mae": 0.04098481204998907,
+      "r2": -12.304507327625936,
       "directional_accuracy": 0.4855421686746988,
       "n_predictions": 830
     },
+    "random_forest": {
+      "rmse": 0.026321326252791315,
+      "mae": 0.01927138953033544,
+      "r2": -0.24917287338909277,
+      "directional_accuracy": 0.5,
+      "n_predictions": 830
+    },
+    "xgboost": {
+      "rmse": 0.024839456736624695,
+      "mae": 0.017491980206315455,
+      "r2": -0.11247739325440254,
+      "directional_accuracy": 0.516867469879518,
+      "n_predictions": 830
+    },
+    "lstm": {
+      "rmse": 0.1431264977077663,
+      "mae": 0.0965557424519997,
+      "r2": -35.935764848153724,
+      "directional_accuracy": 0.4807228915662651,
+      "n_predictions": 830
+    },
     "transformer": {
-      "rmse": 0.04759682709419263,
-      "mae": 0.03693642080352908,
-      "r2": -3.076428964600444,
+      "rmse": 0.16386776080440896,
+      "mae": 0.06902579166651376,
+      "r2": -47.416573052213295,
       "directional_accuracy": 0.4975903614457831,
       "n_predictions": 830
     }
